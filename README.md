@@ -11,6 +11,8 @@
 
 <br>
 
+- [Preview](https://wordsessence.netlify.app)
+
 ### 项目简介
 
 随时记录、分享那些美好的文字片段.

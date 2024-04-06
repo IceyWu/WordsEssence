@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "preserve",
+    "target": "esnext",
+    "module": "esnext",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "jsxImportSource": "vue",
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "resolveJsonModule": true,
+    // "moduleResolution": "node",
+    "useDefineForClassFields": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "@/*": ["src/*"]
+    },
+		"moduleResolution": "Bundler",
+    "types": [
+      "unplugin-vue-router/client",
+			"vite-plugin-vue-layouts/client",
+    ]
+  },
+  "include": [
+    "srcipts",
+    "presets",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "./vite.config.ts",
+		"./typed-router.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

@@ -47,7 +47,7 @@ const dataList = ref<DataItem[]>([
 		“之后呢？” <br />
 		“没有之后” <br />
 		“或者说，等待的结果呢？” <br />
-		““等待就是结果。” <br />
+		“等待就是结果。” <br />
 		“那，不是悲剧吗？” <br />
 		“不，是秋天” <br />
 		`,
@@ -103,7 +103,7 @@ const prevEl = (item: DataItem, index: number) => {
 	<div class="h-full w-full">
 		<DefineTemplate v-slot="{ data }">
 			<div class="base-font">
-				<p class="text-xl" v-html="data.content"></p>
+				<p class="text-xl line-height-10" v-html="data.content"></p>
 				<p class="mt-5 text-end text-lg">——{{ showName(data) }}</p>
 			</div>
 		</DefineTemplate>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { getWordsList } from '@/api/words'
+import { to } from '@iceywu/utils'
 import {
 	Navigation,
 	// Pagination,
@@ -97,6 +99,42 @@ const nextEl = () => {
 const prevEl = (item: DataItem, index: number) => {
 	console.log('prevEl', item, index)
 }
+function formatStringWithBr(str: string) {
+	let punctuationRegex =
+		/([，。！？；：“”‘’（）《》【】〈〉，.。!?;:"''()《》【】〈〉])/g
+	return str.replace(punctuationRegex, function (match) {
+		return match + '<br />'
+	})
+}
+
+// 🌈 接口数据请求
+const getDataLoading = ref(false)
+const getWordsData = async () => {
+	if (getDataLoading.value) return
+	getDataLoading.value = true
+	const params = {}
+	// eslint-disable-next-line no-unused-vars
+	const [_, res] = await to(getWordsList(params))
+	if (res) {
+		const { code, result = [] } = res || {}
+		if (code === 200 && result) {
+			console.log('😊-----数据获取成功-----', result)
+			const tempData = result.map((item) => {
+				return {
+					...item,
+					content: formatStringWithBr(item.content),
+				}
+			})
+			console.log('🌈-----tempData-----', tempData)
+			dataList.value = tempData || []
+		}
+	}
+
+	getDataLoading.value = false
+}
+onMounted(() => {
+	// getWordsData()
+})
 </script>
 
 <template>

@@ -54,7 +54,7 @@ const dataList = ref<DataItem[]>([
 		“不，是秋天” <br />
 		`,
 		author: '史铁生',
-		bookName: '我与地坛',
+		book_name: '我与地坛',
 	},
 	{
 		content: `
@@ -62,7 +62,7 @@ const dataList = ref<DataItem[]>([
 		愿我仍年轻。
 		`,
 		author: '陈繁齐',
-		bookName: '',
+		book_name: '',
 	},
 	{
 		content: `
@@ -71,7 +71,7 @@ const dataList = ref<DataItem[]>([
 		想起生命里曾经有一场相遇
 		`,
 		author: '陈繁齐',
-		bookName: '',
+		book_name: '',
 	},
 	{
 		content: `
@@ -80,13 +80,13 @@ const dataList = ref<DataItem[]>([
 		好让我把余生的温柔都盛给你
 		`,
 		author: '陈繁齐',
-		bookName: '',
+		book_name: '',
 	},
 ])
 const showName = (data: DataItem) => {
-	const { author, bookName } = data
+	const { author, book_name } = data
 	const authorName = author ? author : '佚名'
-	const bookNameTemp = bookName ? `《${bookName}》` : ''
+	const bookNameTemp = book_name ? `《${book_name}》` : ''
 	return `${authorName} ${bookNameTemp}`
 }
 const navigation = {
@@ -118,11 +118,12 @@ const getWordsData = async () => {
 	if (res) {
 		const { code, result = [] } = res || {}
 		if (code === 200 && result) {
-			console.log('😊-----数据获取成功-----', result)
+			// console.log('😊-----数据获取成功-----', result)
 			const tempData = result.map((item) => {
 				return {
 					...item,
-					content: formatStringWithBr(item.content),
+					// content: formatStringWithBr(item.content),
+					content: item.content.replace(/\n/g, '<br>'),
 				}
 			})
 			console.log('🌈-----tempData-----', tempData)
@@ -134,6 +135,9 @@ const getWordsData = async () => {
 }
 onMounted(() => {
 	// getWordsData()
+})
+defineExpose({
+	getWordsData,
 })
 </script>
 

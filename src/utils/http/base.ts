@@ -5,11 +5,11 @@
  */
 const baseLsit = [
 	{
-		apiServer: 'http://localhost:3101/nestTemplate',
+		apiServer: 'http://localhost:3001/api',
 		knobbleServer: 'http://10.0.30.117/section',
 	},
 	{
-		apiServer: 'http://47.108.192.147:3101/nestTemplate',
+		apiServer: 'https://test.wktest.cn:3001/api',
 		knobbleServer: 'http://10.0.30.109/section',
 	},
 ]

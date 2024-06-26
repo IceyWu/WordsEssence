@@ -2,6 +2,7 @@
 import '@unocss/reset/tailwind-compat.css' // unocss reset
 import 'virtual:uno.css'
 import 'virtual:unocss-devtools'
+import 'element-plus/dist/index.css'
 
 // 你自定义的 css
 import './styles/main.css'

@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Quill from 'quill'
 import 'quill/dist/quill.core.css'
-import { saveWords } from '@/api/words'
+import { saveWords, getWordsLDeById, updateWords } from '@/api/words'
 import { to } from '@iceywu/utils'
+const props = defineProps<{ chooseId: string | number | null }>()
 const emit = defineEmits(['dlgClose'])
 const addForm = reactive<any>({
 	author: '',
@@ -18,14 +19,19 @@ const handleSaveWords = async () => {
 
 	const params = toRaw(addForm)
 	params['content'] = quillRef.value.getText()
-	// console.log('🦄-----params-----', params)
+	let requestApi = saveWords
+	if (props.chooseId) {
+		requestApi = updateWords
+		params['id'] = props.chooseId
+	}
+	console.log('🦄-----params-----', params)
+
 	// return
 	// eslint-disable-next-line no-unused-vars
-	const [_, res] = await to(saveWords(params))
+	const [_, res] = await to(requestApi(params))
 	if (res) {
 		const { code, result = [] } = res || {}
 		if (code === 200 && result) {
-			console.log('😊-----保存成功-----', result)
 			emit('dlgClose', true)
 		}
 	}
@@ -33,7 +39,6 @@ const handleSaveWords = async () => {
 	getDataLoading.value = false
 }
 const subumit = () => {
-	console.log('💗subumit---------->', addForm)
 	handleSaveWords()
 }
 
@@ -41,7 +46,7 @@ const quillRef = ref<any>(null)
 const initEditor = async () => {
 	await nextTick()
 	const quill = new Quill('#editor', {
-		theme: 'snow',
+		// theme: 'snow',
 		modules: {
 			toolbar: false,
 		},
@@ -49,9 +54,27 @@ const initEditor = async () => {
 	})
 	quillRef.value = quill
 }
-onMounted(() => {
-	initEditor()
+onMounted(async () => {
+	await initEditor()
+
+	props.chooseId && getWordsDe(props.chooseId)
 })
+const getWordsDe = async (id: any) => {
+	const [_, res] = await to(getWordsLDeById(id))
+	if (res) {
+		const { code, result = [] } = res || {}
+		if (code === 200 && result) {
+			addForm.author = result.author
+			addForm.bookName = result.bookName
+			addForm.content = result.content
+
+			console.log('🌳-----quillRef.value-----', quillRef.value)
+			// quillRef.value.setText(result.content)
+			await nextTick()
+			quillRef.value.setText('Hello\n')
+		}
+	}
+}
 </script>
 
 <template>
@@ -93,7 +116,7 @@ onMounted(() => {
 						class="peer h-full w-full border border-blue-gray-200 border-t-transparent rounded-md bg-transparent px-3 py-3 text-sm text-blue-gray-700 font-normal font-sans outline-0 outline transition-all disabled:border-0 focus:border-2 placeholder-shown:border focus:border-gray-900 placeholder-shown:border-blue-gray-200 !border-t-blue-gray-200 focus:border-t-transparent placeholder-shown:border-t-blue-gray-200 disabled:bg-blue-gray-50 focus:outline-0 focus:!border-t-gray-900"
 					/>
 					<label
-						class="before:content[' '] after:content[' '] pointer-events-none absolute left-0 h-full w-full flex select-none truncate text-[11px] text-gray-500 font-normal leading-tight transition-all after:pointer-events-none before:pointer-events-none -top-1.5 after:ml-1 after:mt-[6.5px] before:mr-1 before:mt-[6.5px] after:box-border before:box-border after:block before:block after:h-1.5 after:w-2.5 before:h-1.5 before:w-2.5 after:flex-grow !overflow-visible after:border-r after:border-t before:border-l before:border-t after:border-blue-gray-200 before:border-blue-gray-200 after:rounded-tr-md before:rounded-tl-md peer-focus:text-[11px] peer-placeholder-shown:text-sm peer-disabled:text-transparent peer-focus:text-gray-900 peer-placeholder-shown:text-blue-gray-500 peer-focus:leading-tight peer-placeholder-shown:leading-[4.1] after:transition-all before:transition-all after:content-none before:content-none peer-focus:after:border-r-2 peer-focus:after:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-t-2 peer-disabled:after:border-transparent peer-disabled:before:border-transparent peer-placeholder-shown:after:border-transparent peer-placeholder-shown:before:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 peer-focus:after:!border-gray-900 peer-focus:before:!border-gray-900"
+						class="'] '] before:content[' after:content[' pointer-events-none absolute left-0 h-full w-full flex select-none truncate text-[11px] text-gray-500 font-normal leading-tight transition-all after:pointer-events-none before:pointer-events-none -top-1.5 after:ml-1 after:mt-[6.5px] before:mr-1 before:mt-[6.5px] after:box-border before:box-border after:block before:block after:h-1.5 after:w-2.5 before:h-1.5 before:w-2.5 after:flex-grow !overflow-visible after:border-r after:border-t before:border-l before:border-t after:border-blue-gray-200 before:border-blue-gray-200 after:rounded-tr-md before:rounded-tl-md peer-focus:text-[11px] peer-placeholder-shown:text-sm peer-disabled:text-transparent peer-focus:text-gray-900 peer-placeholder-shown:text-blue-gray-500 peer-focus:leading-tight peer-placeholder-shown:leading-[4.1] after:transition-all before:transition-all after:content-none before:content-none peer-focus:after:border-r-2 peer-focus:after:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-t-2 peer-disabled:after:border-transparent peer-disabled:before:border-transparent peer-placeholder-shown:after:border-transparent peer-placeholder-shown:before:border-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 peer-focus:after:!border-gray-900 peer-focus:before:!border-gray-900"
 					></label>
 				</div>
 				<h6
@@ -118,7 +141,7 @@ onMounted(() => {
 				type="button"
 				@click="subumit"
 			>
-				提交
+				{{ props.chooseId ? '提交编辑' : '提交' }}
 			</button>
 		</form>
 	</div>

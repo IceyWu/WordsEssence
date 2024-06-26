@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { getWordsList } from '@/api/words'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { getWordsList, deleteWords } from '@/api/words'
 import { to } from '@iceywu/utils'
 import {
 	Navigation,
@@ -116,13 +117,15 @@ const getWordsData = async () => {
 	// eslint-disable-next-line no-unused-vars
 	const [_, res] = await to(getWordsList(params))
 	if (res) {
-		const { code, result = [] } = res || {}
+		const { code, result = {} } = res || {}
 		if (code === 200 && result) {
 			// console.log('😊-----数据获取成功-----', result)
-			const tempData = result.map((item) => {
+			const { data = [] } = result || {}
+			const tempData = data.map((item) => {
 				return {
 					...item,
 					// content: formatStringWithBr(item.content),
+					book_name: item.bookName,
 					content: item.content.replace(/\n/g, '<br>'),
 				}
 			})
@@ -133,8 +136,33 @@ const getWordsData = async () => {
 
 	getDataLoading.value = false
 }
+const emit = defineEmits(['edit'])
+const handleEdit = (item, index) => {
+	emit('edit', item)
+}
+const handleDelete = async (id: any, index) => {
+	ElMessageBox.confirm('确定删除改摘抄吗?', '提示', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning',
+	})
+		.then(async () => {
+			const [_, res] = await to(deleteWords(id))
+			if (res) {
+				const { code, result = [] } = res || {}
+				if (code === 200) {
+					dataList.value.splice(index, 1)
+					ElMessage({
+						type: 'success',
+						message: '删除成功',
+					})
+				}
+			}
+		})
+		.catch(() => {})
+}
 onMounted(() => {
-	// getWordsData()
+	getWordsData()
 })
 defineExpose({
 	getWordsData,
@@ -166,6 +194,23 @@ defineExpose({
 			@slide-change="onSlideChange"
 		>
 			<swiper-slide v-for="(item, index) in dataList" :key="index">
+				<div class="fixed bottom-10 right-10 flex gap-5">
+					<button
+						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
+						type="button"
+						@click="handleEdit(item, index)"
+					>
+						编辑
+					</button>
+					<button
+						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
+						type="button"
+						@click="handleDelete(item.id, index)"
+					>
+						删除
+					</button>
+				</div>
+
 				<div class="box-border h-full w-full fcc px-13">
 					<ReuseTemplate :data="item" />
 				</div>
@@ -178,7 +223,7 @@ defineExpose({
 
 			<!--左箭头。如果放置在swiper外面，需要自定义样式。-->
 			<div
-				class="swiper-button-next btn-icon !text-[#374151]"
+				class="btn-icon swiper-button-next !text-[#374151]"
 				@click.stop="nextEl"
 			/>
 		</swiper>

@@ -25,9 +25,7 @@
     "deps:fresh": "plop --plopfile scripts/deps-fresh.cjs",
     "lint:fix": "eslint --fix --ext .ts,.js,.jsx,.vue,.cjs ."
   },
-  "engines": {
-    "node": ">=20.11.0"
-  },
+
   "devDependencies": {
     "@iceywu/utils": "^0.0.41",
     "@iconify-json/carbon": "^1.1.31",

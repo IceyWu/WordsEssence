@@ -167,6 +167,11 @@ onMounted(() => {
 defineExpose({
 	getWordsData,
 })
+// const swiperRef = ref();
+// const swiperActiveIndex = computed(() => {
+// 	console.log('🍪-----swiperRef.value-----', swiperRef.value);
+// 	return swiperRef.value?.activeIndex
+// })
 </script>
 
 <template>

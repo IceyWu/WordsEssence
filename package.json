@@ -29,7 +29,7 @@
     "node": ">=20.11.0"
   },
   "devDependencies": {
-    "@iceywu/utils": "^0.0.38",
+    "@iceywu/utils": "^0.0.41",
     "@iconify-json/carbon": "^1.1.31",
     "@intlify/unplugin-vue-i18n": "^4.0.0",
     "@types/ityped": "^1.0.3",
@@ -143,6 +143,6 @@
     "iOS >= 8"
   ],
   "dependencies": {
-    "quill": "2.0.0-rc.5"
+    "quill": "2.0.2"
   }
 }

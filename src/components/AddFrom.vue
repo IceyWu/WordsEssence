@@ -68,10 +68,15 @@ const getWordsDe = async (id: any) => {
 			addForm.bookName = result.bookName
 			addForm.content = result.content
 
-			console.log('🌳-----quillRef.value-----', quillRef.value)
+			// console.log('🌳-----quillRef.value-----', quillRef.value)
+			// console.log('🌳-----quillRef.value-----', quillRef.value.getText())
 			// quillRef.value.setText(result.content)
-			await nextTick()
-			quillRef.value.setText('Hello\n')
+			// await nextTick()
+			// // quillRef.value.setText('Hello')
+			// setTimeout(() => {
+
+			// 	quillRef.value.insertText(0, 'DevUI 是一款面向企业中后台产品的开源前端解决方案');
+			// }, 1000);
 		}
 	}
 }

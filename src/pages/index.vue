@@ -33,7 +33,7 @@ const handleEdit = (data) => {
 				type="button"
 				@click="openDlg"
 			>
-				Add
+				新增
 			</button>
 		</div>
 		<dialog ref="dlgRef" class="overflow-hidden rounded-xl">

@@ -113,7 +113,10 @@ const getDataLoading = ref(false)
 const getWordsData = async () => {
 	if (getDataLoading.value) return
 	getDataLoading.value = true
-	const params = {}
+	const params = {
+		page: 1,
+		size: 1000,
+	}
 	// eslint-disable-next-line no-unused-vars
 	const [_, res] = await to(getWordsList(params))
 	if (res) {

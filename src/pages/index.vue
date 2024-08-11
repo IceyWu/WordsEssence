@@ -6,11 +6,12 @@ const { x, y, style } = useDraggable(el, {
 const dlgRef = ref<any>(null)
 const chooseId = ref(null)
 const isShowForm = ref(false)
-const openDlg = () => {
+function openDlg() {
 	dlgRef.value.showModal()
 	isShowForm.value = true
 }
-const closeDlg = (flag) => {
+const textListRef = ref(null)
+function closeDlg(flag) {
 	dlgRef.value.close()
 	if (flag) {
 		textListRef.value?.getWordsData()
@@ -18,8 +19,8 @@ const closeDlg = (flag) => {
 	isShowForm.value = false
 	chooseId.value = null
 }
-const textListRef = ref(null)
-const handleEdit = (data) => {
+
+function handleEdit(data) {
 	chooseId.value = data.id
 	openDlg()
 }

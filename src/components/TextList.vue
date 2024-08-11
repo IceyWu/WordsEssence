@@ -220,7 +220,7 @@ defineExpose({
 					</button>
 				</div>
 
-				<div class="box-border h-full w-full fcc px-13">
+				<div class="box-border h-full w-full fcc px-48">
 					<ReuseTemplate :data="item" />
 				</div>
 			</SwiperSlide>

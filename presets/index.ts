@@ -35,7 +35,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 
 import I18N from '@intlify/unplugin-vue-i18n/vite'
-// import Legacy from 'vite-plugin-legacy-swc'
+import Legacy from '@vitejs/plugin-legacy'
 import Vue from '@vitejs/plugin-vue'
 import Jsx from '@vitejs/plugin-vue-jsx'
 
@@ -67,9 +67,9 @@ export default function () {
 		 * 兼容不支持 esmModule 的浏览器
 		 * https://www.npmjs.com/package/@vitejs/plugin-legacy
 		 */
-		// Legacy({
-		// 	targets: defaultBuildTargets,
-		// }),
+		Legacy({
+			targets: defaultBuildTargets,
+		}),
 		/**
 		 * 智能启动 lightningcss
 		 */

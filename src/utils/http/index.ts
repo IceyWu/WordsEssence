@@ -69,7 +69,7 @@ class PureHttp {
 		PureHttp.axiosInstance.interceptors.request.use(
 			async (config: PureHttpRequestConfig): Promise<any> => {
 				const {
-					isNeedToken = true,
+					isNeedToken = false,
 					isNeedLoading = false,
 					serverName = 'apiServer',
 					roleName,

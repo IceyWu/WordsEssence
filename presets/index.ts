@@ -125,9 +125,9 @@ export default function () {
 		 * mock 服务
 		 * https://github.com/vbenjs/vite-plugin-mock
 		 */
-		Mock({
-			prodEnabled: env.VITE_APP_MOCK_IN_PRODUCTION,
-		}),
+		// Mock({
+		// 	prodEnabled: env.VITE_APP_MOCK_IN_PRODUCTION,
+		// }),
 		/**
 		 * 组件自动按需引入
 		 * https://github.com/antfu/unplugin-vue-components

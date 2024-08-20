@@ -28,19 +28,7 @@ const emit = defineEmits(['edit'])
 // const onSwiper = (swiper) => {
 
 // }
-function onSlideChange() {
-
-}
-
-const modules = [Navigation, Scrollbar, A11y, Keyboard, Mousewheel]
-
-const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
-interface DataItem {
-	author?: string
-	title?: string
-	content: string
-	bookName?: string
-}
+const chooseVal = ref({})
 const dataList = ref<DataItem[]>([
 	{
 		content: `
@@ -86,6 +74,26 @@ const dataList = ref<DataItem[]>([
 		book_name: '',
 	},
 ])
+// const chooseIndex = ref(0);
+function onSlideChange(data) {
+	// console.log('🌈-----data.activeIndex-----', data.activeIndex);
+	const dataListVal = dataList.value[data.activeIndex]
+	chooseVal.value = dataListVal
+}
+const swiperRef = ref()
+const chooseIndex = computed(() => {
+	return swiperRef.value?.activeIndex
+})
+
+const modules = [Navigation, Scrollbar, A11y, Keyboard, Mousewheel]
+
+const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
+interface DataItem {
+	author?: string
+	title?: string
+	content: string
+	bookName?: string
+}
 function showName(data: DataItem) {
 	const { author, book_name } = data
 	const authorName = author || '佚名'
@@ -136,15 +144,18 @@ return
 			})
 
 			dataList.value = tempData || []
+			chooseVal.value = dataList.value[0]
 		}
 	}
 
 	getDataLoading.value = false
 }
-function handleEdit(item, index) {
-	emit('edit', item)
+function handleEdit() {
+	emit('edit', chooseVal.value)
 }
-async function handleDelete(id: any, index) {
+async function handleDelete() {
+	const id = chooseVal.value?.id
+	const index = chooseIndex.value
 	ElMessageBox.confirm('确定删除改摘抄吗?', '提示', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
@@ -181,13 +192,14 @@ defineExpose({
 <template>
 	<div class="h-full w-full">
 		<DefineTemplate v-slot="{ data }">
-			<div class="base-font">
+<div class="base-font">
 				<p class="text-xl line-height-10" v-html="data.content" />
 				<p class="mt-5 text-end text-lg">——{{ showName(data) }}</p>
 			</div>
 		</DefineTemplate>
 		<!-- 列表 -->
 		<Swiper
+		ref="swiperRef"
 			class="h-full"
 			:modules="modules"
 			:loop="true"
@@ -203,40 +215,37 @@ defineExpose({
 			@slide-change="onSlideChange"
 		>
 			<SwiperSlide v-for="(item, index) in dataList" :key="index">
-				<div class="fixed bottom-10 right-10 flex gap-5">
+<div class="box-border h-full w-full fcc px-48">
+					<ReuseTemplate :data="item" />
+				</div>
+			</SwiperSlide>
+
+			<!-- <div
+				class="swiper-button-prev btn-icon !text-[#374151]"
+				@click.stop="prevEl(item, index)"
+			/>
+
+			<div
+				class="btn-icon swiper-button-next !text-[#374151]"
+				@click.stop="nextEl"
+			/> -->
+		</Swiper>
+		<div class="fixed bottom-10 right-10 z-999 flex gap-5">
 					<button
 						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
 						type="button"
-						@click="handleEdit(item, index)"
+						@click="handleEdit"
 					>
 						编辑
 					</button>
 					<button
 						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
 						type="button"
-						@click="handleDelete(item.id, index)"
+						@click="handleDelete"
 					>
 						删除
 					</button>
 				</div>
-
-				<div class="box-border h-full w-full fcc px-48">
-					<ReuseTemplate :data="item" />
-				</div>
-			</SwiperSlide>
-
-			<div
-				class="swiper-button-prev btn-icon !text-[#374151]"
-				@click.stop="prevEl(item, index)"
-			/>
-
-			<!-- 左箭头。如果放置在swiper外面，需要自定义样式。 -->
-			<div
-				class="btn-icon swiper-button-next !text-[#374151]"
-				@click.stop="nextEl"
-			/>
-		</Swiper>
-		<div />
 	</div>
 </template>
 

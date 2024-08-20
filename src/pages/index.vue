@@ -21,8 +21,10 @@ function closeDlg(flag) {
 }
 
 function handleEdit(data) {
-	chooseId.value = data.id
-	openDlg()
+	if (data.id) {
+		chooseId.value = data.id
+		openDlg()
+	}
 }
 </script>
 

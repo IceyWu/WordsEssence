@@ -26,6 +26,7 @@ return
 		requestApi = updateWords
 		params.id = props.chooseId
 	}
+	// console.log('🐳-----params-----', params);
 
 	// return
 
@@ -43,7 +44,7 @@ function subumit() {
 	handleSaveWords()
 }
 
-async function initEditor() {
+async function initEditor(content: string) {
 	await nextTick()
 	const quill = new Quill('#editor', {
 		// theme: 'snow',
@@ -53,10 +54,12 @@ async function initEditor() {
 		placeholder: '内容(必填)',
 	})
 	quillRef.value = quill
+	// quill.insertText(0, 'Hello');
+	if (content) {
+		quill.setText(content)
+	}
 }
 onMounted(async () => {
-	await initEditor()
-
 	props.chooseId && getWordsDe(props.chooseId)
 })
 async function getWordsDe(id: any) {
@@ -67,14 +70,7 @@ async function getWordsDe(id: any) {
 			addForm.author = result.author
 			addForm.bookName = result.bookName
 			addForm.content = result.content
-
-			// quillRef.value.setText(result.content)
-			// await nextTick()
-			// // quillRef.value.setText('Hello')
-			// setTimeout(() => {
-
-			// 	quillRef.value.insertText(0, 'DevUI 是一款面向企业中后台产品的开源前端解决方案');
-			// }, 1000);
+			initEditor(result.content)
 		}
 	}
 }

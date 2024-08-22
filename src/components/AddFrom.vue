@@ -44,7 +44,7 @@ function subumit() {
 	handleSaveWords()
 }
 
-async function initEditor(content: string) {
+async function initEditor(content?: string) {
 	await nextTick()
 	const quill = new Quill('#editor', {
 		// theme: 'snow',
@@ -60,7 +60,12 @@ async function initEditor(content: string) {
 	}
 }
 onMounted(async () => {
-	props.chooseId && getWordsDe(props.chooseId)
+	if (props.chooseId) {
+		getWordsDe(props.chooseId)
+	}
+else {
+		initEditor()
+	}
 })
 async function getWordsDe(id: any) {
 	const [_, res] = await to(getWordsLDeById(id))

@@ -54,3 +54,9 @@ function handleEdit(data) {
 		<TextList ref="textListRef" msg="minutes" @edit="handleEdit" />
 	</div>
 </template>
+
+<style>
+::-webkit-scrollbar {
+  display: none;
+}
+</style>

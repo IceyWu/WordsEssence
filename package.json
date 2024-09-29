@@ -33,6 +33,8 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
     "quill": "2.0.2"
   },
   "devDependencies": {

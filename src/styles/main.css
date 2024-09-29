@@ -54,8 +54,12 @@ html.dark ::-webkit-scrollbar-thumb {
 }
 
 @font-face {
-  font-family: 'SmileySansOblique';
-  src: url('@/assets/font/SmileySans-Oblique.ttf');
+  /* font-family: 'SmileySansOblique';
+  src: url('@/assets/font/SmileySans-Oblique.ttf'); */
+  /* font-family: 'sst';
+  src: url('@/assets/font/sst.ttf'); */
+  font-family: '新叶念体';
+  src: url('@/assets/font/新叶念体.otf');
   font-weight: normal;
   font-style: normal;
 }

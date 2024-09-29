@@ -1,12 +1,12 @@
 <template>
 	<div
 		font-sans
-		text="center gray-700 dark:gray-200"
+		text="center gray-900 dark:gray-200"
 		class="box-border h-screen w-full flex flex-col"
 	>
 		<!-- <div class="sticky top-0 z-999"><TheHeader /></div> -->
-		<div class="gridlines absolute inset-x-0 z-10 py-20 -mt-8" />
-		<div class="absolute inset-x-0 z-20 py-20 -mt-24">
+		<div v-if="0" class="gridlines absolute inset-x-0 z-10 py-20 -mt-8" />
+		<div v-if="0" class="absolute inset-x-0 z-20 py-20 -mt-24">
 			<div
 				class="grid grid-cols-2 mt-12 opacity-60 2xl:mx-auto 2xl:max-w-6xl dark:opacity-50 -space-x-52"
 				data-v-257aca76=""
@@ -48,5 +48,8 @@
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

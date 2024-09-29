@@ -4,8 +4,6 @@ import { to } from '@iceywu/utils'
 import {
 	A11y,
 	Navigation,
-	// Pagination,
-	Scrollbar,
 	Keyboard,
 	Mousewheel,
 } from 'swiper/modules'
@@ -85,7 +83,8 @@ const chooseIndex = computed(() => {
 	return swiperRef.value?.activeIndex
 })
 
-const modules = [Navigation, Scrollbar, A11y, Keyboard, Mousewheel]
+// const modules = [Navigation, Scrollbar, A11y, Keyboard, Mousewheel]
+const modules = [Navigation, A11y, Keyboard, Mousewheel]
 
 const [DefineTemplate, ReuseTemplate] = createReusableTemplate()
 interface DataItem {
@@ -104,15 +103,10 @@ const navigation = {
 	nextEl: '.swiper-button-next',
 	prevEl: '.swiper-button-prev',
 }
-function nextEl() {
-
-}
-function prevEl(item: DataItem, index: number) {
-
-}
+function nextEl() {}
+function prevEl(item: DataItem, index: number) {}
 function formatStringWithBr(str: string) {
-	const punctuationRegex
-		= /([，。！？；：“”‘’（）《》【】〈〉.!?;:"'()])/g
+	const punctuationRegex = /([，。！？；：“”‘’（）《》【】〈〉.!?;:"'()])/g
 	return str.replace(punctuationRegex, (match) => {
 		return `${match}<br />`
 	})
@@ -192,14 +186,17 @@ defineExpose({
 <template>
 	<div class="h-full w-full">
 		<DefineTemplate v-slot="{ data }">
-<div class="base-font">
-				<p class="text-xl line-height-10" v-html="data.content" />
-				<p class="mt-5 text-end text-lg">——{{ showName(data) }}</p>
+			<div class="base-bg">
+					<div class="base-font note-book">
+				<div class="note-book-cover" />
+				<p class=" " v-html="data.content" />
+				<p class="text-end">——{{ showName(data) }}</p>
 			</div>
-		</DefineTemplate>
+			</div>
+</DefineTemplate>
 		<!-- 列表 -->
 		<Swiper
-		ref="swiperRef"
+			ref="swiperRef"
 			class="h-full"
 			:modules="modules"
 			:loop="true"
@@ -215,7 +212,7 @@ defineExpose({
 			@slide-change="onSlideChange"
 		>
 			<SwiperSlide v-for="(item, index) in dataList" :key="index">
-<div class="box-border h-full w-full fcc px-48">
+				<div class="box-border h-full w-full fcc px-48">
 					<ReuseTemplate :data="item" />
 				</div>
 			</SwiperSlide>
@@ -231,25 +228,25 @@ defineExpose({
 			/> -->
 		</Swiper>
 		<div class="fixed bottom-10 right-10 z-999 flex gap-5">
-					<button
-						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
-						type="button"
-						@click="handleEdit"
-					>
-						编辑
-					</button>
-					<button
-						class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
-						type="button"
-						@click="handleDelete"
-					>
-						删除
-					</button>
-				</div>
+			<button
+				class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
+				type="button"
+				@click="handleEdit"
+			>
+				编辑
+			</button>
+			<button
+				class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
+				type="button"
+				@click="handleDelete"
+			>
+				删除
+			</button>
+		</div>
 	</div>
 </template>
 
-<style scoped>
+<style lang="less" scoped>
 .read-the-docs {
   color: #888;
   font-size: 1.2rem;
@@ -268,7 +265,8 @@ defineExpose({
 }
 
 .base-font {
-  font-family: 'SmileySansOblique';
+  // font-family: 'SmileySansOblique';
+  font-family: '新叶念体';
   text-align: start;
 }
 .btn-icon {
@@ -293,5 +291,41 @@ defineExpose({
   &:hover {
     transform: scale(1.1);
   }
+}
+.note-book {
+  height: 100%;
+  width: 100%;
+  background: #fef9e7;
+  padding: 0px 14px;
+  box-sizing: border-box;
+  // border-radius: 4px;
+  // box-shadow: 0 0 4px #b2babb;
+
+  background: linear-gradient(transparent 96%, #999 0);
+  line-height: 2.5em;
+  background-size: 100% 2.5em;
+  background-attachment: local;
+  position: relative;
+}
+.note-book-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.base-bg {
+  background-image: url('@/assets/img/light/2.png');
+  background-size: 100% 100%;
+  box-sizing: border-box;
+  padding: 20px 30px;
+  box-shadow: 0 0 4px #b2babb;
+  box-sizing: border-box;
+  border-radius: 2px;
+  font-size: large;
+}
+// 隐藏滚动条
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

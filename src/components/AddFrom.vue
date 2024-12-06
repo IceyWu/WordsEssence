@@ -3,6 +3,9 @@ import Quill from 'quill'
 import 'quill/dist/quill.core.css'
 import { to } from '@iceywu/utils'
 import { getWordsLDeById, saveWords, updateWords } from '@/api/words'
+import ImageUploader from '@/components/ImageUploader.vue'
+import ImagePreview from '@/components/ImagePreview.vue'
+import { recognizeText } from '@/services/tesseractService'
 
 const props = defineProps<{ chooseId: string | number | null }>()
 const emit = defineEmits(['dlgClose'])
@@ -12,6 +15,7 @@ const addForm = reactive<any>({
 	content: '',
 })
 const quillRef = ref<any>(null)
+let quillTemp: Quill
 // 🌈 接口数据请求
 const getDataLoading = ref(false)
 async function handleSaveWords() {
@@ -20,13 +24,12 @@ return
 	getDataLoading.value = true
 
 	const params = toRaw(addForm)
-	params.content = quillRef.value.getText()
+	params.content = quillTemp.getText()
 	let requestApi = saveWords
 	if (props.chooseId) {
 		requestApi = updateWords
 		params.id = props.chooseId
 	}
-	// console.log('🐳-----params-----', params);
 
 	// return
 
@@ -54,6 +57,7 @@ async function initEditor(content?: string) {
 		placeholder: '内容(必填)',
 	})
 	quillRef.value = quill
+	quillTemp = quill
 	// quill.insertText(0, 'Hello');
 	if (content) {
 		quill.setText(content)
@@ -63,7 +67,7 @@ onMounted(async () => {
 	if (props.chooseId) {
 		getWordsDe(props.chooseId)
 	}
-else {
+ else {
 		initEditor()
 	}
 })
@@ -79,12 +83,48 @@ async function getWordsDe(id: any) {
 		}
 	}
 }
+const imageUrl = ref('')
+const recognizedText = ref('')
+const isLoading = ref(false)
+
+async function handleImageSelected(file: File) {
+	// Revoke the previous object URL to prevent memory leaks
+	if (imageUrl.value) {
+		URL.revokeObjectURL(imageUrl.value)
+	}
+
+	imageUrl.value = URL.createObjectURL(file)
+	isLoading.value = true
+	recognizedText.value = ''
+
+	try {
+		recognizedText.value = await recognizeText(file)
+		quillTemp.setText(recognizedText.value)
+	}
+ catch (error) {
+		recognizedText.value = '识别失败，请重试'
+	}
+ finally {
+		isLoading.value = false
+	}
+}
 </script>
 
 <template>
 	<div
-		class="relative z-9999 flex flex-col items-center rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none"
+		class="relative z-9999 max-h-80vh flex flex-col items-center overflow-auto rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none"
 	>
+		<div v-if="1" class="relative">
+			<ImageUploader v-if="!isLoading" @image-selected="handleImageSelected" />
+			<ImagePreview :image-url="imageUrl" />
+			<!-- 加载遮罩 -->
+			<div
+				v-if="isLoading"
+				class="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 text-white"
+			>
+				识别中....
+			</div>
+		</div>
 		<h4
 			class="block text-2xl text-blue-gray-900 font-semibold leading-snug tracking-normal font-sans antialiased"
 		>

@@ -1,17 +1,16 @@
-import { createWorker } from 'tesseract.js'
+import { createWorker } from 'tesseract.js';
 
-export async function recognizeText(imageFile: File): Promise<string> {
-  const worker = await createWorker('chi_sim+eng', 1, {
-		workerPath: 'https://fastly.jsdelivr.net/npm/tesseract.js@v5.1.1/dist/worker.min.js',
-	})
-
+export const recognizeText = async (imageFile: File): Promise<string> => {
   try {
-    const { data: { text } } = await worker.recognize(imageFile)
-    await worker.terminate()
-    return text
+    const worker = await createWorker('chi_sim+eng');
+    
+    const { data: { text } } = await worker.recognize(imageFile);
+    
+    await worker.terminate();
+    
+    return text.trim();
+  } catch (error) {
+    console.error('OCR Error:', error);
+    throw new Error('Failed to recognize text from image');
   }
- catch (error) {
-    await worker.terminate()
-    throw error
-  }
-}
+};

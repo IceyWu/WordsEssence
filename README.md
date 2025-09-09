@@ -1,44 +1,59 @@
-<p align="center">
-  <br>
-  <!-- <img width="100" src="./public/logo.svg" alt="logo of vue-awesome repository"> -->
-	〰️
-  <br>
-  <br>
-</p>
-<p align='center'>
-<b>言摘</b><sup><em>(WordsEssence)</em></sup><br>
-</p>
+# WordsEssence React Version
 
-<br>
+This is a React rewrite of the original Vue.js WordsEssence application using:
 
-- [Preview](https://wordsessence.netlify.app)
+- **React 18** with TypeScript
+- **Vite** for build tool
+- **Tailwind CSS v4** for styling
+- **Shadcn/ui** for UI components
+- **React Router** for routing
+- **Tesseract.js** for OCR functionality
+- **Swiper** for carousel functionality
 
-### 项目简介
+## Features
 
-随时记录、分享那些美好的文字片段.
+- 📝 Add and edit text excerpts with OCR support
+- 🎨 Beautiful notebook-style display
+- 🔄 Swipeable text carousel
+- 📱 Responsive design
+- 🖼️ Image text recognition
+- 📋 Grid list view
 
-### 动机
+## Getting Started
 
-创作“言摘”网站的灵感与动机主要源于我对便捷记录美好文字片段的渴望。在阅读或生活的旅程中，我们时常会遇到那些令人心动、引人深思的好文或好句，它们或许是一段深刻的哲理，或许是一句动人的情感表达，又或许是一段富有诗意的描绘。然而，这些美好的文字片段往往只是短暂地停留在我们的脑海中，随着时间的流逝而逐渐淡忘。所以想创建一个这样的媒介记录和分享美好的文字片段，让这些美好的文字片段得以其他方式的延续和传播。
+```bash
+# Install dependencies
+npm install
 
-## Todo
+# Start development server
+npm run dev
 
-- [x] 项目初始化
-- [x] 页面构建
-- [ ] 前端页面设计与开发（进行中😊）
-- [ ] 数据库设计(mysql)
-- [ ] 后端接口设计(python+fastapi),预设计为不强制登录，可通过自定义用户名和密码登录，有当前用户名则不允许重复注册；无注册发布的信息以匿名形式展示;降低用户门槛，提高用户体验
-- [ ] 项目部署
-      <br>
+# Build for production
+npm run build
+```
 
-## 🐟 Show
+## Project Structure
 
-<p align="center">
-<img src="./public/eg.png" style="width:100%;"  />
-</p>
+```
+src/
+├── components/
+│   ├── ui/           # Shadcn/ui components
+│   ├── AddForm.tsx   # Add/Edit form with OCR
+│   ├── TextList.tsx  # Swipeable text display
+│   ├── ImageUploader.tsx
+│   └── ImagePreview.tsx
+├── pages/
+│   ├── HomePage.tsx  # Main swipeable view
+│   ├── AddPage.tsx   # Standalone add page
+│   └── ListPage.tsx  # Grid list view
+├── services/
+│   └── tesseractService.ts # OCR service
+├── types/
+│   └── index.ts      # TypeScript types
+└── lib/
+    └── utils.ts      # Utility functions
+```
 
-## Inspiration
+## Development
 
-This template is inspired by **[cloud-template](https://github.com/IceyWu/cloud-template)**
-
-<br />
+The app maintains feature parity with the original Vue.js version while using modern React patterns and Tailwind CSS v4.

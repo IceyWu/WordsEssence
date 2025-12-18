@@ -1,77 +1,97 @@
 <script setup lang="ts">
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+
 const el = ref<HTMLElement | null>(null)
-const { x, y, style } = useDraggable(el, {
+const { style } = useDraggable(el, {
 	initialValue: { x: 40, y: 40 },
 })
-const dlgRef = ref<any>(null)
-const chooseId = ref(null)
-const isShowForm = ref(false)
+const chooseId = ref<string | number | null>(null)
+const isDialogOpen = ref(false)
+
 function openDlg() {
-	dlgRef.value.showModal()
-	isShowForm.value = true
+	isDialogOpen.value = true
 }
-const textListRef = ref(null)
-function closeDlg(flag) {
-	dlgRef.value.close()
+
+const textListRef = ref<InstanceType<typeof TextList> | null>(null)
+
+function closeDlg(flag?: boolean) {
+	isDialogOpen.value = false
 	if (flag) {
 		textListRef.value?.getWordsData()
 	}
-	isShowForm.value = false
 	chooseId.value = null
 }
 
-function handleEdit(data) {
+function handleEdit(data: { id?: string | number }) {
 	if (data.id) {
 		chooseId.value = data.id
 		openDlg()
 	}
 }
+
 const fontLoading = ref(true)
 // 添加字体加载是否成功的事件
 document.fonts.ready.then(() => {
-  // 使用该字体渲染文字（如：在 canvas 中绘制）
 	fontLoading.value = false
 })
 </script>
 
 <template>
-	<div class="paper-bg h-[100vh] w-full">
-		<div ref="el" class="z-9999" :style="style" style="position: fixed">
-			<button
-				class="flex select-none items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
-				type="button"
-				@click="openDlg"
-			>
-				新增
-			</button>
+	<div class="relative h-screen w-full overflow-hidden bg-neutral-50 dark:bg-neutral-950">
+		<!-- 装饰性背景 -->
+		<div class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+			<div class="absolute -right-32 -top-32 h-[500px] w-[500px] rounded-full bg-neutral-200/50 blur-3xl dark:bg-neutral-800/30" />
+			<div class="absolute -bottom-32 -left-32 h-[400px] w-[400px] rounded-full bg-neutral-200/50 blur-3xl dark:bg-neutral-800/30" />
 		</div>
-		<dialog ref="dlgRef" class="overflow-hidden rounded-xl">
-			<div v-if="isShowForm" class="relative p-3">
-				<button
-					class="absolute right-2 top-2 z-999999 flex cursor-pointer items-center gap-3 rounded-full bg-white p-3.5 text-center align-middle text-sm text-blue-gray-900 font-bold font-sans uppercase shadow-blue-gray-500/10 shadow-xl transition-all disabled:pointer-events-none active:opacity-[0.85] disabled:opacity-50 focus:opacity-[0.85] active:shadow-none disabled:shadow-none focus:shadow-none hover:shadow-blue-gray-500/20 hover:shadow-lg"
-					type="button"
-					@click="closeDlg"
-				>
-					X
-				</button>
-				<AddFrom :choose-id @dlg-close="closeDlg" />
-			</div>
-		</dialog>
+
+		<!-- 新增按钮 -->
+		<div ref="el" class="z-[9999]" :style="style" style="position: fixed">
+			<Button class="gap-2 rounded-full px-5 shadow-lg" @click="openDlg">
+				<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="12" y1="5" x2="12" y2="19" />
+					<line x1="5" y1="12" x2="19" y2="12" />
+				</svg>
+				<span class="base-font">新增</span>
+			</Button>
+		</div>
+
+		<!-- 弹窗 -->
+		<Dialog v-model:open="isDialogOpen">
+			<DialogContent class="max-h-[90vh] max-w-lg overflow-auto sm:max-w-xl">
+				<DialogHeader class="sr-only">
+					<DialogTitle>{{ chooseId ? '编辑摘抄' : '新增摘抄' }}</DialogTitle>
+					<DialogDescription>记录美好的文字片段</DialogDescription>
+				</DialogHeader>
+				<AddFrom :choose-id="chooseId" @dlg-close="closeDlg" />
+			</DialogContent>
+		</Dialog>
+
+		<!-- 加载状态 -->
 		<template v-if="fontLoading">
-			<div>
-				loading...
+			<div class="flex h-screen flex-col items-center justify-center gap-4">
+				<div class="h-8 w-8 animate-spin rounded-full border-2 border-neutral-300 border-t-neutral-900 dark:border-neutral-700 dark:border-t-neutral-100" />
+				<p class="base-font text-sm text-neutral-500">正在加载...</p>
 			</div>
-</template>
+		</template>
+
+		<!-- 文字列表 -->
 		<TextList v-else ref="textListRef" msg="minutes" @edit="handleEdit" />
 	</div>
 </template>
 
-<style>
+<style scoped>
 ::-webkit-scrollbar {
   display: none;
 }
-/* 模拟纸张背景 */
-.paper-bg {
-  /* background: #c2c2c2; */
+
+.base-font {
+  font-family: '新叶念体', sans-serif;
 }
 </style>

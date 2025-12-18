@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { vOnClickOutside } from '@vueuse/components'
+import { vOnClickOutside } from "@vueuse/components";
 
-const visiable = ref(false)
+const visiable = ref(false);
 function dropdownHandler() {
-	visiable.value = false
+  visiable.value = false;
 }
 
-const { availableLocales, locale } = useI18n()
+const { availableLocales, locale } = useI18n();
 </script>
 
 <template>
 	<div class="relative">
-		<div class="inline-flex items-center overflow-hidden rounded-md">
+		<div class="rounded-md inline-flex items-center overflow-hidden">
 			<button
-				class="h-full cursor-pointer border-0 bg-white p-2 text-gray-600 hover:bg-gray-200 hover:text-gray-700"
-				dark="bg-transparent hover:bg-gray-500"
-				:class="visiable ? 'bg-gray-200 bg-gray-500 dark:bg-gray-500' : ''"
+				class="text-gray-600 p-2 border-0 bg-white h-full cursor-pointer hover:text-gray-700 hover:bg-gray-200 dark:bg-transparent dark:hover:bg-gray-500"
+				:class="visiable ? 'bg-gray-200 dark:bg-gray-500' : ''"
 				@click.stop="visiable = !visiable"
 			>
 				<svg
@@ -37,8 +36,7 @@ const { availableLocales, locale } = useI18n()
 			<div
 				v-if="visiable"
 				v-on-click-outside.bubble="dropdownHandler"
-				dark="bg-gray-500"
-				class="absolute end-0 z-10 mt-2 w-56 rounded-md bg-white shadow-lg divide-y divide-gray-100"
+				class="mt-2 rounded-md bg-white dark:bg-gray-500 w-56 shadow-lg end-0 absolute z-10 divide-gray-100 divide-y"
 			>
 				<div class="p-2">
 					<span
@@ -49,8 +47,7 @@ const { availableLocales, locale } = useI18n()
 								? 'bg-gray-100 text-gray-800 dark:bg-gray-400'
 								: ''
 						"
-						class="block cursor-pointer rounded-lg px-4 py-2 text-sm text-gray-500 hover:text-gray-900"
-						dark="text-light-500 hover:text-light-900"
+						class="text-sm text-gray-500 dark:text-gray-200 px-4 py-2 rounded-lg block cursor-pointer hover:text-gray-900 dark:hover:text-white"
 						@click="locale = availableLocale"
 					>
 						{{ availableLocale }}

@@ -4,7 +4,6 @@
     "jsx": "preserve",
     "jsxImportSource": "vue",
     "lib": ["esnext", "dom"],
-    // "moduleResolution": "node",
     "useDefineForClassFields": true,
     "baseUrl": ".",
     "module": "esnext",
@@ -14,15 +13,13 @@
       "@/*": ["src/*"]
     },
     "resolveJsonModule": true,
-    "types": [
-      "unplugin-vue-router/client",
-      "vite-plugin-vue-layouts/client"
-    ],
+    "types": ["unplugin-vue-router/client", "vite-plugin-vue-layouts/client"],
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "strictNullChecks": true
   },
   "include": [
     "srcipts",

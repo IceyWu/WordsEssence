@@ -125,10 +125,11 @@ return
 
 	const [_, res] = await to(getWordsList(params))
 	if (res) {
-		const { code, result = {} } = res || {}
-		if (code === 200 && result) {
-			const { data = [] } = result || {}
-			const tempData = data.map((item) => {
+		const { code, data = {} } = res || {}
+		console.log('🍧-----res-----', res);
+		if (code === 200 && data) {
+			const { list = [] } = data || {}
+			const tempData = list.map((item) => {
 				return {
 					...item,
 					// content: formatStringWithBr(item.content),

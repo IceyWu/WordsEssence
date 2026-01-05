@@ -17,7 +17,7 @@ const baseLsit = [
 const ServerNumber = import.meta.env.VITE_APP_SERVER_ID ? import.meta.env.VITE_APP_SERVER_ID : 0;
 // const ServerNumber = 1;
 const baseUrl: Record<string, string> = baseLsit[ServerNumber];
-console.log('🎁-----baseUrl-----', baseUrl);
+console.log("🎁-----baseUrl-----", baseUrl);
 
 export default baseUrl;
-console.log('🍭-----baseUrl-----', baseUrl);
+console.log("🍭-----baseUrl-----", baseUrl);

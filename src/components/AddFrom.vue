@@ -1,113 +1,113 @@
 <script setup lang="ts">
-import Quill from 'quill'
-import 'quill/dist/quill.core.css'
-import { to } from '@iceywu/utils'
-import { getWordsLDeById, saveWords, updateWords } from '@/api/words'
-import { recognizeText } from '@/services/tesseractService'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Button } from '@/components/ui/button'
+import Quill from "quill";
+import "quill/dist/quill.core.css";
+import { to } from "@iceywu/utils";
+import { getWordsLDeById, saveWords, updateWords } from "@/api/words";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { recognizeText } from "@/services/tesseractService";
 
-const props = defineProps<{ chooseId: string | number | null }>()
-const emit = defineEmits(['dlgClose'])
+const props = defineProps<{ chooseId: string | number | null }>();
+const emit = defineEmits(["dlgClose"]);
 
 const addForm = reactive<any>({
-	author: '',
-	bookName: '',
-	content: '',
-})
+  author: "",
+  bookName: "",
+  content: "",
+});
 
-const quillRef = ref<any>(null)
-let quillTemp: Quill
+const quillRef = ref<any>(null);
+let quillTemp: Quill;
 
-const getDataLoading = ref(false)
-const imageUrl = ref('')
-const isLoading = ref(false)
-const fileInput = ref<HTMLInputElement | null>(null)
+const getDataLoading = ref(false);
+const imageUrl = ref("");
+const isLoading = ref(false);
+const fileInput = ref<HTMLInputElement | null>(null);
 
 async function handleSaveWords() {
-	if (getDataLoading.value) return
-	getDataLoading.value = true
+  if (getDataLoading.value) return;
+  getDataLoading.value = true;
 
-	const params = toRaw(addForm)
-	params.content = quillTemp.getText()
-	let requestApi = saveWords
-	if (props.chooseId) {
-		requestApi = updateWords
-		params.id = props.chooseId
-	}
+  const params = toRaw(addForm);
+  params.content = quillTemp.getText();
+  let requestApi = saveWords;
+  if (props.chooseId) {
+    requestApi = updateWords;
+    params.id = props.chooseId;
+  }
 
-	const [_, res] = await to(requestApi(params))
-	if (res) {
-		const { code, result = [] } = res || {}
-		if (code === 200 && result) {
-			emit('dlgClose', true)
-		}
-	}
+  const [_, res] = await to(requestApi(params));
+  if (res) {
+    const { code, data = [] } = res || {};
+    if ([200, 201].includes(code) && data) {
+      emit("dlgClose", true);
+    }
+  }
 
-	getDataLoading.value = false
+  getDataLoading.value = false;
 }
 
 function submit() {
-	handleSaveWords()
+  handleSaveWords();
 }
 
 async function initEditor(content?: string) {
-	await nextTick()
-	const quill = new Quill('#editor', {
-		modules: { toolbar: false },
-		placeholder: '写下触动你的文字...',
-	})
-	quillRef.value = quill
-	quillTemp = quill
-	if (content) {
-		quill.setText(content)
-	}
+  await nextTick();
+  const quill = new Quill("#editor", {
+    modules: { toolbar: false },
+    placeholder: "写下触动你的文字...",
+  });
+  quillRef.value = quill;
+  quillTemp = quill;
+  if (content) {
+    quill.setText(content);
+  }
 }
 
 onMounted(async () => {
-	if (props.chooseId) {
-		getWordsDe(props.chooseId)
-	} else {
-		initEditor()
-	}
-})
+  if (props.chooseId) {
+    getWordsDe(props.chooseId);
+  } else {
+    initEditor();
+  }
+});
 
 async function getWordsDe(id: any) {
-	const [_, res] = await to(getWordsLDeById(id))
-	if (res) {
-		const { code, result = [] } = res || {}
-		if (code === 200 && result) {
-			addForm.author = result.author
-			addForm.bookName = result.bookName
-			addForm.content = result.content
-			initEditor(result.content)
-		}
-	}
+  const [_, res] = await to(getWordsLDeById(id));
+  if (res) {
+    const { code, data = {} } = res || {};
+    if (code === 200 && data) {
+      addForm.author = data.author;
+      addForm.bookName = data.bookName;
+      addForm.content = data.content;
+      initEditor(data.content);
+    }
+  }
 }
 
 function handleFileChange(event: Event) {
-	const input = event.target as HTMLInputElement
-	if (input.files?.[0]) {
-		handleImageSelected(input.files[0])
-	}
+  const input = event.target as HTMLInputElement;
+  if (input.files?.[0]) {
+    handleImageSelected(input.files[0]);
+  }
 }
 
 async function handleImageSelected(file: File) {
-	if (imageUrl.value) {
-		URL.revokeObjectURL(imageUrl.value)
-	}
-	imageUrl.value = URL.createObjectURL(file)
-	isLoading.value = true
+  if (imageUrl.value) {
+    URL.revokeObjectURL(imageUrl.value);
+  }
+  imageUrl.value = URL.createObjectURL(file);
+  isLoading.value = true;
 
-	try {
-		const text = await recognizeText(file)
-		quillTemp.setText(text)
-	} catch {
-		quillTemp.setText('识别失败，请重试')
-	} finally {
-		isLoading.value = false
-	}
+  try {
+    const text = await recognizeText(file);
+    quillTemp.setText(text);
+  } catch {
+    quillTemp.setText("识别失败，请重试");
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 

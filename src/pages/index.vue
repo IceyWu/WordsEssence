@@ -1,46 +1,46 @@
 <script setup lang="ts">
+import { Button } from "@/components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
-const el = ref<HTMLElement | null>(null)
+const el = ref<HTMLElement | null>(null);
 const { style } = useDraggable(el, {
-	initialValue: { x: 40, y: 40 },
-})
-const chooseId = ref<string | number | null>(null)
-const isDialogOpen = ref(false)
+  initialValue: { x: 40, y: 40 },
+});
+const chooseId = ref<string | number | null>(null);
+const isDialogOpen = ref(false);
 
 function openDlg() {
-	isDialogOpen.value = true
+  isDialogOpen.value = true;
 }
 
-const textListRef = ref<InstanceType<typeof TextList> | null>(null)
+const textListRef = ref<InstanceType<typeof TextList> | null>(null);
 
 function closeDlg(flag?: boolean) {
-	isDialogOpen.value = false
-	if (flag) {
-		textListRef.value?.getWordsData()
-	}
-	chooseId.value = null
+  isDialogOpen.value = false;
+  if (flag) {
+    textListRef.value?.getWordsData();
+  }
+  chooseId.value = null;
 }
 
 function handleEdit(data: { id?: string | number }) {
-	if (data.id) {
-		chooseId.value = data.id
-		openDlg()
-	}
+  if (data.id) {
+    chooseId.value = data.id;
+    openDlg();
+  }
 }
 
-const fontLoading = ref(true)
+const fontLoading = ref(true);
 // 添加字体加载是否成功的事件
 document.fonts.ready.then(() => {
-	fontLoading.value = false
-})
+  fontLoading.value = false;
+});
 </script>
 
 <template>

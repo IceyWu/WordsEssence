@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-  text: string
-  loading: boolean
-}>()
+  text: string;
+  loading: boolean;
+}>();
 </script>
 
 <template>

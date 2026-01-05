@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useClipboard } from '../composables/useClipboard'
+import { ref } from "vue";
+import { useClipboard } from "../composables/useClipboard";
 
-const emit = defineEmits<{
-  (e: 'imageSelected', file: File): void
-}>()
+const emit = defineEmits<(e: "imageSelected", file: File) => void>();
 
-const fileInput = ref<HTMLInputElement | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null);
 
 function handleFileChange(event: Event) {
-  const input = event.target as HTMLInputElement
+  const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
-    emit('imageSelected', input.files[0])
+    emit("imageSelected", input.files[0]);
   }
 }
 
 function handleImagePaste(file: File) {
-  emit('imageSelected', file)
+  emit("imageSelected", file);
 }
 
-useClipboard(handleImagePaste)
+useClipboard(handleImagePaste);
 </script>
 
 <template>

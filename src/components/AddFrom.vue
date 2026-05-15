@@ -6,7 +6,7 @@ import { getWordsLDeById, saveWords, updateWords } from "@/api/words";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { recognizeText } from "@/services/tesseractService";
+import { recognizeText } from "@/services/ocrService";
 
 const props = defineProps<{ chooseId: string | number | null }>();
 const emit = defineEmits(["dlgClose"]);

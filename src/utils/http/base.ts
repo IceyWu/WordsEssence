@@ -5,7 +5,7 @@
  */
 const baseLsit = [
   {
-    apiServer: "http://8.137.127.2:9527/api",
+    apiServer: "https://wd.iceywu.cn/api",
     knobbleServer: "http://10.0.30.117/section",
   },
   {

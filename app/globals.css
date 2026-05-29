@@ -1,0 +1,269 @@
+@import "tailwindcss";
+
+/* =========================================================================
+   字里 — a personal commonplace book.
+   淡雅艺术: a light, refined surface — soft rice-paper / ink-wash tones,
+   gentle warmth, lots of air. Pieces of paper rest on it like a quiet desk.
+   ========================================================================= */
+
+@theme {
+  /* Ink */
+  --color-ink: #2b2b33;
+  --color-ink-soft: #5c5b66;
+  --color-ink-faint: #9b99a3;
+
+  /* Paper + ground */
+  --color-paper: #fffdf9;
+  --color-ground: #eceae3;
+
+  /* Accent — a single muted celadon/seal pair, used sparingly */
+  --color-seal: #b06a5e; /* faded vermilion (delete, ribbons) */
+  --color-celadon: #8aa39b; /* soft jade, quiet highlights */
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  --font-sans: var(--font-notion-sans);
+  --font-hand: var(--font-xinye);
+}
+
+:root {
+  color-scheme: light;
+}
+
+/* ---- The ground: soft rice paper with faint ink-wash blooms ---- */
+.desk {
+  background-color: var(--color-ground);
+  background-image:
+    /* pale ink-wash blooms, very diffuse */
+    radial-gradient(
+      40% 32% at 18% 22%,
+      rgba(138, 163, 155, 0.12),
+      transparent 70%
+    ),
+    radial-gradient(
+      44% 36% at 84% 30%,
+      rgba(176, 106, 94, 0.07),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 40% at 70% 86%,
+      rgba(150, 160, 180, 0.1),
+      transparent 72%
+    ),
+    /* top light */
+    radial-gradient(
+      120% 80% at 50% -8%,
+      rgba(255, 255, 255, 0.75),
+      transparent 55%
+    ),
+    /* base wash */
+    linear-gradient(160deg, #f3f1ea 0%, #eceae3 55%, #e7e8e6 100%);
+  position: relative;
+}
+/* fine paper fiber over the whole ground */
+.desk::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+/* a whisper of vignette so the page has depth without going dark */
+.desk::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    100% 100% at 50% 38%,
+    transparent 62%,
+    rgba(90, 90, 100, 0.08) 100%
+  );
+}
+
+/* ---- A sheet of paper ---- */
+.paper {
+  position: relative;
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  border-radius: var(--radius-sm);
+  /* softer, lighter lift to match the airy palette */
+  box-shadow:
+    0 1px 1px rgba(40, 40, 50, 0.04),
+    0 2px 4px rgba(40, 40, 50, 0.04),
+    0 16px 30px -14px rgba(60, 60, 80, 0.28);
+  transition:
+    transform 240ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 240ms ease;
+}
+/* paper fiber grain */
+.paper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.025'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+}
+/* a faint inner edge so the sheet reads as a physical object */
+.paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 0 1px rgba(90, 80, 60, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* Paper variants ------------------------------------------------------- */
+
+/* warm rice-paper sheet (default) */
+.paper--cream {
+  background-color: #fffdf7;
+  background-image: linear-gradient(
+    160deg,
+    rgba(150, 140, 110, 0.04),
+    transparent 38%
+  );
+}
+
+/* ruled notebook page — soft grey-blue lines + faint celadon margin */
+.paper--ruled {
+  background-color: #fdfefe;
+  background-image: linear-gradient(
+    rgba(120, 140, 160, 0.14) 1px,
+    transparent 1px
+  );
+  background-size: 100% 2.1rem;
+  background-position: 0 1.9rem;
+}
+.paper--ruled .paper-margin {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2.4rem;
+  width: 1px;
+  background: rgba(176, 106, 94, 0.28);
+}
+
+/* sticky note — soft, desaturated pastels (no harsh yellow) */
+.paper--sticky {
+  background-color: #eaf0ea;
+  background-image: linear-gradient(180deg, #eef3ec, #e2ebe4);
+  box-shadow:
+    0 1px 1px rgba(40, 50, 45, 0.04),
+    0 14px 26px -14px rgba(70, 90, 80, 0.3);
+}
+.paper--sticky::after {
+  box-shadow: inset 0 0 0 1px rgba(110, 120, 110, 0.06);
+}
+
+/* index card — warm white with a single faint header line */
+.paper--index {
+  background-color: #fffefb;
+  background-image: linear-gradient(
+    rgba(176, 106, 94, 0.18) 1px,
+    transparent 1px
+  );
+  background-size: 100% 100%;
+  background-position: 0 2.6rem;
+  background-repeat: no-repeat;
+}
+
+/* ---- Washi tape strip ---- */
+.tape {
+  position: absolute;
+  width: 92px;
+  height: 26px;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  background: rgba(200, 212, 204, 0.55);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.28) 0px,
+    rgba(255, 255, 255, 0.28) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  box-shadow: 0 1px 2px rgba(40, 40, 50, 0.08);
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 4px,
+    #000 calc(100% - 4px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    #000 4px,
+    #000 calc(100% - 4px),
+    transparent 100%
+  );
+}
+.tape--amber {
+  background-color: rgba(225, 205, 170, 0.5);
+}
+.tape--blue {
+  background-color: rgba(186, 200, 214, 0.5);
+}
+.tape--rose {
+  background-color: rgba(214, 190, 188, 0.5);
+}
+
+/* ---- Ink colour variations for handwriting ---- */
+.ink-blueblack {
+  color: #2c3344;
+}
+.ink-black {
+  color: #2b2a26;
+}
+.ink-sepia {
+  color: #574236;
+}
+
+/* the handwriting itself — a touch of weight + the tiniest ink bleed */
+.handwriting {
+  font-family: var(--font-hand);
+  letter-spacing: 0.01em;
+  text-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.03);
+}
+
+/* ---- Motion ---- */
+@keyframes tearAway {
+  to {
+    opacity: 0;
+    transform: translateY(18px) rotate(6deg) scale(0.92);
+  }
+}
+.is-removing {
+  animation: tearAway 320ms ease forwards;
+  pointer-events: none;
+}
+
+@keyframes settleIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) rotate(var(--tilt, 0deg)) scale(0.97);
+  }
+}
+.settle-in {
+  animation: settleIn 360ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper,
+  .settle-in,
+  .is-removing {
+    transition: none;
+    animation: none;
+  }
+}

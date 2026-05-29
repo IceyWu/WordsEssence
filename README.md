@@ -30,15 +30,3 @@
 - [ ] 后端接口设计(python+fastapi),预设计为不强制登录，可通过自定义用户名和密码登录，有当前用户名则不允许重复注册；无注册发布的信息以匿名形式展示;降低用户门槛，提高用户体验
 - [ ] 项目部署
       <br>
-
-## 🐟 Show
-
-<p align="center">
-<img src="./public/eg.png" style="width:100%;"  />
-</p>
-
-## Inspiration
-
-This template is inspired by **[cloud-template](https://github.com/IceyWu/cloud-template)**
-
-<br />

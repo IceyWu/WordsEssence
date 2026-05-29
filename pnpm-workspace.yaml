@@ -1,5 +1,2 @@
 allowBuilds:
-  core-js: false
-  esbuild: false
-  less: false
-  vue-demi: false
+  sharp: false

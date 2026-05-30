@@ -69,9 +69,9 @@ async function parseEnvelope<T>(res: Response): Promise<T> {
 }
 
 /**
- * Fetch a page of essays. Cached via Cache Components so deeper pages (older
- * entries that rarely change) are served from the static shell; invalidated on
- * mutation through the `essays` tag.
+ * Fetch a page of essays. Cached via Cache Components so the immersive reading
+ * view is served from the static shell; invalidated on mutation through the
+ * `essays` tag.
  */
 export async function listEssays(
   params: ListParams = {},
@@ -89,29 +89,6 @@ export async function listEssays(
 
   const res = await connectFetch(`${ESSAYS}?${qs}`, {
     headers: { accept: 'application/json' },
-  })
-  return parseEnvelope<PageResult<Essay>>(res)
-}
-
-/**
- * Uncached read for the live "desk" view (home page first screen). Always hits
- * the upstream so a full refresh reflects the latest writes immediately — the
- * cached `listEssays` above can serve stale content in production after a
- * mutation (read-your-own-writes via `updateTag` only covers the action's own
- * response, not a later hard refresh / another server instance).
- */
-export async function listEssaysLive(
-  params: ListParams = {},
-): Promise<PageResult<Essay>> {
-  const qs = new URLSearchParams({
-    page: String(params.page ?? 1),
-    page_size: String(params.page_size ?? 1000),
-    sort: params.sort ?? 'id,desc',
-  })
-
-  const res = await connectFetch(`${ESSAYS}?${qs}`, {
-    headers: { accept: 'application/json' },
-    cache: 'no-store',
   })
   return parseEnvelope<PageResult<Essay>>(res)
 }

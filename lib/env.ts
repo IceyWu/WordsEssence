@@ -6,4 +6,4 @@ export const API_BASE_URL =
 
 /** Base URL of the AI OCR task service. Server-side only. */
 export const AI_BASE_URL =
-  process.env.AI_BASE_URL?.replace(/\/$/, "") ?? "https://api.lpalette.cn";
+  process.env.AI_BASE_URL?.replace(/\/$/, "") ?? "http://8.137.127.2:9540";

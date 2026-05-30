@@ -71,14 +71,16 @@ async function parseEnvelope<T>(res: Response): Promise<T> {
 /**
  * Fetch a page of essays. Cached via Cache Components so the immersive reading
  * view is served from the static shell; invalidated on mutation through the
- * `essays` tag.
+ * `essays` tag. Uses a short ('seconds') lifetime so a full refresh reflects
+ * new writes within a few seconds even if tag invalidation is missed (e.g.
+ * across multiple server instances).
  */
 export async function listEssays(
   params: ListParams = {},
 ): Promise<PageResult<Essay>> {
   'use cache'
   const { cacheLife, cacheTag } = await import('next/cache')
-  cacheLife('hours')
+  cacheLife('seconds')
   cacheTag('essays')
 
   const qs = new URLSearchParams({

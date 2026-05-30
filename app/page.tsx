@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { listEssays } from "@/lib/api";
+import { listEssaysLive } from "@/lib/api";
 import { Board } from "./_components/board";
 
 export const PAGE_SIZE = 30;
@@ -15,7 +15,8 @@ export default function Home() {
 }
 
 async function Scene() {
-  const { list, page, total_pages } = await listEssays({
+  // Live read (no-store): a full refresh always shows the latest entries.
+  const { list, page, total_pages } = await listEssaysLive({
     sort: "id,desc",
     page: 1,
     page_size: PAGE_SIZE,

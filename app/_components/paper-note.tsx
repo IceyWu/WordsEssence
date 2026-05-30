@@ -3,7 +3,7 @@
 import { Fragment, useState, useTransition } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import type { Essay } from "@/lib/types";
-import { authorOf, bookOf, formatDate, isAnonymous, toLines } from "@/lib/format";
+import { authorOf, bookOf, formatDate, toLines } from "@/lib/format";
 import { paperStyleFor } from "@/lib/paper-style";
 import { removeEntry } from "@/app/actions/essays";
 import { PaperClip } from "./paper-clip";
@@ -11,9 +11,11 @@ import { PaperClip } from "./paper-clip";
 export function PaperNote({
   essay,
   onEdit,
+  onDeleted,
 }: {
   essay: Essay;
   onEdit: (essay: Essay) => void;
+  onDeleted?: (id: number) => void;
 }) {
   const style = paperStyleFor(essay);
   const lines = toLines(essay.content);
@@ -27,7 +29,9 @@ export function PaperNote({
     setTimeout(() => {
       startTransition(async () => {
         const res = await removeEntry(essay.id);
-        if (!res.ok) {
+        if (res.ok) {
+          onDeleted?.(essay.id);
+        } else {
           setRemoving(false);
           alert(res.error);
         }
@@ -39,7 +43,6 @@ export function PaperNote({
   const author = authorOf(essay);
   const book = bookOf(essay);
   const date = formatDate(essay.created_at);
-  const anon = isAnonymous(essay);
   const onSticky = style.variant === "sticky";
 
   return (
@@ -112,22 +115,14 @@ export function PaperNote({
 
           {/* author + source */}
           <div className="min-w-0 text-right leading-snug">
-            {anon ? (
-              <span className="text-lg">佚名</span>
-            ) : (
-              <>
-                {author ? (
-                  <div className="truncate text-lg text-ink-soft">
-                    {author}
-                  </div>
-                ) : null}
-                {book ? (
-                  <div className="truncate text-base text-ink-faint">
-                    《{book}》
-                  </div>
-                ) : null}
-              </>
-            )}
+            {author ? (
+              <div className="truncate text-lg text-ink-soft">{author}</div>
+            ) : null}
+            {book ? (
+              <div className="truncate text-base text-ink-faint">
+                《{book}》
+              </div>
+            ) : null}
           </div>
         </div>
 

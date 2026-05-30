@@ -4,9 +4,26 @@ import { updateTag } from "next/cache";
 import {
   createEssay,
   deleteEssay,
+  listEssays,
   updateEssay,
 } from "@/lib/api";
 import type { Essay } from "@/lib/types";
+
+/**
+ * Read one page of essays for the client's infinite-scroll board.
+ * Returns the slice plus whether more pages remain.
+ */
+export async function fetchEssaysPage(
+  page: number,
+  pageSize: number,
+): Promise<{ list: Essay[]; hasMore: boolean }> {
+  const result = await listEssays({
+    page,
+    page_size: pageSize,
+    sort: "id,desc",
+  });
+  return { list: result.list, hasMore: result.page < result.total_pages };
+}
 
 /**
  * Mutations for the commonplace book. This is a personal diary — every entry

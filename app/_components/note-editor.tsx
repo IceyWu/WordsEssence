@@ -23,10 +23,12 @@ export function NoteEditor({
   open,
   editing,
   onClose,
+  onSaved,
 }: {
   open: boolean;
   editing: Essay | null;
   onClose: () => void;
+  onSaved?: (essay: Essay, isNew: boolean) => void;
 }) {
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
@@ -115,6 +117,7 @@ export function NoteEditor({
         ? await editEntry(editing.id, formData)
         : await addEntry(formData);
       if (res.ok) {
+        if (res.essay) onSaved?.(res.essay, !editing);
         onClose();
       } else {
         setError(res.error);

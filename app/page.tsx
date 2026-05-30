@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import { listEssays } from "@/lib/api";
-import { SiteHeader } from "./_components/site-header";
 import { Board } from "./_components/board";
+
+export const PAGE_SIZE = 30;
 
 export default function Home() {
   return (
@@ -14,11 +15,18 @@ export default function Home() {
 }
 
 async function Scene() {
-  const { list } = await listEssays({ sort: "id,desc", page_size: 1000 });
+  const { list, page, total_pages } = await listEssays({
+    sort: "id,desc",
+    page: 1,
+    page_size: PAGE_SIZE,
+  });
   return (
     <div className="relative z-10">
-      <SiteHeader count={list.length} />
-      <Board essays={list} />
+      <Board
+        initialEssays={list}
+        initialHasMore={page < total_pages}
+        pageSize={PAGE_SIZE}
+      />
     </div>
   );
 }

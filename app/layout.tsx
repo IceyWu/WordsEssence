@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
+// Inter shipped locally (self-hosted variable font) so builds never reach out
+// to Google Fonts. Same typeface as before — see --font-sans in globals.css.
+import "@fontsource-variable/inter";
 import "./globals.css";
-
-// Notion-Sans is Inter-based; Inter is the documented fallback.
-const notionSans = Inter({
-  variable: "--font-notion-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 // The original site's handwriting typeface — preserves its soul for bodies.
 const xinye = localFont({
@@ -31,7 +26,7 @@ export default function RootLayout({
   return (
     <html
       lang="zh-CN"
-      className={`${notionSans.variable} ${xinye.variable} h-full`}
+      className={`${xinye.variable} h-full`}
     >
       <body className="min-h-full font-sans antialiased">{children}</body>
     </html>

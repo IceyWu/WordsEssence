@@ -23,7 +23,8 @@
   --radius-sm: 2px;
   --radius-md: 4px;
 
-  --font-sans: var(--font-notion-sans);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-hand: var(--font-xinye);
 }
 

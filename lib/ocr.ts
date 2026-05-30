@@ -46,6 +46,26 @@ const ACCEPTED = new Set([
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
+/**
+ * A fetch that turns low-level connection failures (DNS / unreachable network /
+ * TLS) into a clear, actionable message instead of a bare `fetch failed`.
+ * These come from undici as a TypeError with a `cause`, and usually mean the
+ * server can't reach the OCR host (e.g. broken IPv6 routing, blocked egress).
+ */
+async function connectFetch(
+  input: string,
+  init?: RequestInit,
+): Promise<Response> {
+  try {
+    return await fetch(input, init);
+  } catch (e) {
+    if (e instanceof TypeError) {
+      throw new Error("无法连接识别服务，请检查服务器出站网络");
+    }
+    throw e;
+  }
+}
+
 export async function recognizeText(file: File): Promise<string> {
   if (!file || file.size === 0) throw new Error("没有收到图片");
   if (file.size > MAX_BYTES) throw new Error("图片太大了（上限 20MB）");
@@ -58,7 +78,7 @@ export async function recognizeText(file: File): Promise<string> {
   form.append("type", "ocr");
   form.append("file", file, file.name || "image.png");
 
-  const submitRes = await fetch(SUBMIT, { method: "POST", body: form });
+  const submitRes = await connectFetch(SUBMIT, { method: "POST", body: form });
   if (!submitRes.ok) {
     throw new Error(`提交识别任务失败 (${submitRes.status})`);
   }
@@ -71,7 +91,7 @@ export async function recognizeText(file: File): Promise<string> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     await sleep(attempt === 0 ? 800 : 1500);
 
-    const res = await fetch(TASK(taskId), {
+    const res = await connectFetch(TASK(taskId), {
       headers: { accept: "application/json" },
       cache: "no-store",
     });

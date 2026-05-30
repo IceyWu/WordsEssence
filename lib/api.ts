@@ -31,6 +31,26 @@ class ApiError extends Error {
   }
 }
 
+/**
+ * A fetch that turns low-level connection failures (DNS / unreachable network /
+ * TLS) into a clear message instead of a bare `fetch failed`. undici raises a
+ * TypeError with a `cause` for these — usually the server can't reach the
+ * upstream host (e.g. broken IPv6 routing, blocked egress).
+ */
+async function connectFetch(
+  input: string,
+  init?: RequestInit,
+): Promise<Response> {
+  try {
+    return await fetch(input, init)
+  } catch (e) {
+    if (e instanceof TypeError) {
+      throw new ApiError('无法连接数据服务，请检查服务器出站网络', 0)
+    }
+    throw e
+  }
+}
+
 async function parseEnvelope<T>(res: Response): Promise<T> {
   if (!res.ok) {
     let message = `Upstream request failed (${res.status})`
@@ -67,7 +87,7 @@ export async function listEssays(
     sort: params.sort ?? 'id,desc',
   })
 
-  const res = await fetch(`${ESSAYS}?${qs}`, {
+  const res = await connectFetch(`${ESSAYS}?${qs}`, {
     headers: { accept: 'application/json' },
   })
   return parseEnvelope<PageResult<Essay>>(res)
@@ -79,7 +99,7 @@ export async function getEssay(id: number): Promise<Essay> {
   cacheLife('hours')
   cacheTag('essays', `essay:${id}`)
 
-  const res = await fetch(`${ESSAYS}/${id}`, {
+  const res = await connectFetch(`${ESSAYS}/${id}`, {
     headers: { accept: 'application/json' },
   })
   return parseEnvelope<Essay>(res)
@@ -88,7 +108,7 @@ export async function getEssay(id: number): Promise<Essay> {
 // --- Mutations (called only from authorised Server Actions) ---
 
 export async function createEssay(input: CreateEssayInput): Promise<Essay> {
-  const res = await fetch(ESSAYS, {
+  const res = await connectFetch(ESSAYS, {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/json' },
     body: JSON.stringify(input),
@@ -100,7 +120,7 @@ export async function updateEssay(
   id: number,
   input: UpdateEssayInput,
 ): Promise<Essay> {
-  const res = await fetch(`${ESSAYS}/${id}`, {
+  const res = await connectFetch(`${ESSAYS}/${id}`, {
     method: 'PUT',
     headers: { 'content-type': 'application/json', accept: 'application/json' },
     body: JSON.stringify(input),
@@ -109,7 +129,7 @@ export async function updateEssay(
 }
 
 export async function deleteEssay(id: number): Promise<void> {
-  const res = await fetch(`${ESSAYS}/${id}`, { method: 'DELETE' })
+  const res = await connectFetch(`${ESSAYS}/${id}`, { method: 'DELETE' })
   await parseEnvelope<void>(res)
 }
 

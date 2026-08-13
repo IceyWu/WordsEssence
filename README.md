@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://wd.iceywu.cn">🌐 正式地址</a>
+  <a href="https://wd.levwu.me">🌐 正式地址</a>
   &nbsp;·&nbsp;
   <a href="https://wordsessence.netlify.app">🪂 备用地址</a>
 </p>
@@ -85,7 +85,7 @@ pnpm start
 
 | 变量 | 默认值 | 说明 |
 |------|--------|------|
-| `API_BASE_URL` | `https://wd.iceywu.cn` | Essays API 上游（文字数据）|
+| `API_BASE_URL` | `http://127.0.0.1:6002` | Essays API 上游（文字数据）|
 | `AI_BASE_URL` | `https://api.lpalette.cn` | OCR API 上游（图片转文字）|
 
 ## 🧭 架构概览

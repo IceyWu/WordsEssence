@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://wd.iceywu.cn">🌐 Primary</a>
+  <a href="https://wd.levwu.me">🌐 Primary</a>
   &nbsp;·&nbsp;
   <a href="https://wordsessence.netlify.app">🪂 Mirror</a>
 </p>
@@ -85,7 +85,7 @@ Both are read **only on the server** (`lib/env.ts`) and never reach the client b
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `API_BASE_URL` | `https://wd.iceywu.cn` | Essays API upstream (text data) |
+| `API_BASE_URL` | `http://127.0.0.1:6002` | Essays API upstream (text data) |
 | `AI_BASE_URL` | `https://api.lpalette.cn` | OCR API upstream (image to text) |
 
 ## 🧭 Architecture

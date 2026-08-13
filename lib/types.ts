@@ -1,5 +1,5 @@
 // Domain + API types, derived from the Go API Swagger spec
-// (https://wd.iceywu.cn/service/swagger/doc.json)
+// (https://wd.levwu.me/service/swagger/doc.json)
 
 /** A single essay / quote record as returned by the API. */
 export interface Essay {

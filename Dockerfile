@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1
-
 # ---------------------------------------------------------------------------
 # 言摘（WordsEssence）Docker 镜像
 # 应用直接监听 5005，容器内外端口一致，无需再做宿主机端口映射。
@@ -7,17 +5,21 @@
 # ---------------------------------------------------------------------------
 
 # ---------- 1. 依赖层：安装依赖，利用 Docker 层缓存 ----------
-FROM node:22-alpine AS deps
-# 启用 corepack 并锁定 package.json 中声明的 pnpm 版本
+# 基础镜像走 DaoCloud 加速（宿主机直连 Docker Hub 会超时）
+FROM docker.m.daocloud.io/library/node:24-alpine AS deps
+# 使用国内 npm 镜像：corepack 下载 pnpm 与 pnpm 安装依赖均走该源
+ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@11.0.9 --activate
 WORKDIR /app
 
 # 先只复制依赖清单，保证依赖变化前该层可复用
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm config set registry https://registry.npmmirror.com \
+    && pnpm install --frozen-lockfile
 
 # ---------- 2. 构建层：编译 Next.js 应用 ----------
-FROM node:22-alpine AS builder
+FROM docker.m.daocloud.io/library/node:24-alpine AS builder
+ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
 RUN corepack enable && corepack prepare pnpm@11.0.9 --activate
 WORKDIR /app
 
@@ -28,7 +30,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm run build
 
 # ---------- 3. 运行层：最小化产物 ----------
-FROM node:22-alpine AS runner
+FROM docker.m.daocloud.io/library/node:24-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

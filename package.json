@@ -4,9 +4,9 @@
   "private": true,
   "packageManager": "pnpm@11.0.9",
   "scripts": {
-    "dev": "next dev -p 6001",
+    "dev": "next dev -p 5005",
     "build": "next build",
-    "start": "next start -p 6001"
+    "start": "next start -p 5005"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",

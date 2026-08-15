@@ -69,7 +69,7 @@
 # 安装依赖
 pnpm install
 
-# 启动开发服务器 → http://localhost:6001
+# 启动开发服务器 → http://localhost:5005
 pnpm dev
 
 # 生产构建（校验类型 + 预渲染）

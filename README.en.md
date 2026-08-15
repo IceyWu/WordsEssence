@@ -69,7 +69,7 @@ While reading or simply living, we keep running into lines that move us or make 
 # Install dependencies
 pnpm install
 
-# Start the dev server → http://localhost:6001
+# Start the dev server → http://localhost:5005
 pnpm dev
 
 # Production build (type-check + prerender)

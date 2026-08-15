@@ -1,10 +1,7 @@
 import { Suspense } from "react";
+import { connection } from "next/server";
 import { listEssays } from "@/lib/api";
 import { Board } from "./_components/board";
-
-// 首页数据来自上游 Essays API，构建容器内无法访问（127.0.0.1:6002）。
-// 强制动态渲染，避免 next build 预渲染首页时因上游 404 而失败。
-export const dynamic = "force-dynamic";
 
 export const PAGE_SIZE = 30;
 
@@ -19,6 +16,10 @@ export default function Home() {
 }
 
 async function Scene() {
+  // 数据来自上游 Essays API，构建容器内无法访问（127.0.0.1:6002）。
+  // 用 connection() 让该组件运行时才渲染，避免 next build 预渲染时请求上游。
+  await connection();
+
   const { list, page, total_pages } = await listEssays({
     sort: "id,desc",
     page: 1,
